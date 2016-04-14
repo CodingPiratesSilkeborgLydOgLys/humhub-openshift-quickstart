@@ -29,9 +29,11 @@ $(function() {
                     if (data.result.files.error == true) {
                         handleUploadError(data.result);
                     } else {
-                        $('#user-account-image').attr('src', data.result.files.url + '&c=' + Math.random());
+                        if (profileImageUploaderUserGuid === profileImageUploaderCurrentUserGuid) {
+                            $('#user-account-image').attr('src', data.result.files.url + '&c=' + Math.random());
+                        } 
                         $('#user-profile-image').attr('src', data.result.files.url + '&c=' + Math.random());
-                        $('.user-' + userGuid).attr('src', data.result.files.url + '&c=' + Math.random());
+                        $('.user-' + profileImageUploaderUserGuid).attr('src', data.result.files.url + '&c=' + Math.random());
                         $('#user-profile-image').addClass('animated bounceIn');
                     }
 
@@ -104,6 +106,18 @@ function handleUploadError(json) {
     $('#uploadErrorModal .modal-dialog .modal-content .modal-body').html(json.files.errors.image);
     $('#uploadErrorModal').modal('show');
 
+}
+
+function resetProfileImage(json) {
+
+    if (json.type == 'profile') {
+        $('#user-profile-image img').attr('src', json.defaultUrl);
+        $('#user-profile-image').attr('src', json.defaultUrl);
+    } else if (json.type == "banner") {
+        $('#user-banner-image').attr('src', json.defaultUrl);
+    }
+
+    $('.image-upload-buttons').hide();
 }
 
 

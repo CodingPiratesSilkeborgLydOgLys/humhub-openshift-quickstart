@@ -46,7 +46,7 @@ use yii\helpers\Url;
                         'bgColor' => 'black',
                         'bgOpacity' => '0.5',
                         'boxWidth' => '440',
-                        'onChange' => new yii\web\JsExpression('function(c){ console.log("fooo"); $("#cropX").val(c.x);$("#cropY").val(c.y);$("#cropW").val(c.w);$("#cropH").val(c.h); }')
+                        'onChange' => new yii\web\JsExpression('function(c){ $("#cropX").val(c.x);$("#cropY").val(c.y);$("#cropW").val(c.w);$("#cropH").val(c.h); }')
                     ]
                 ]);
                 ?>
@@ -62,7 +62,7 @@ use yii\helpers\Url;
                     'id' => 'blabla',
                     'beforeSend' => new yii\web\JsExpression('function(){ setModalLoader(); }'),
                     'success' => new yii\web\JsExpression('function(html){ $("#globalModal").html(html); }'),
-                    'url' => Url::toRoute('/user/account/crop-profile-image'),
+                    'url' => Url::toRoute(['/user/account/crop-profile-image', 'userGuid' => $user->guid]),
                 ],
                 'htmlOptions' => [
                     'class' => 'btn btn-primary'
@@ -70,18 +70,10 @@ use yii\helpers\Url;
             ]);
             ?>
 
-            <?php //echo CHtml::submitButton(Yii::t('UserModule.views_profile_cropProfileImage', 'Save'), array('class' => 'btn btn-primary'));    ?>
-
             <button type="button" class="btn btn-primary"
                     data-dismiss="modal"><?php echo Yii::t('UserModule.views_profile_cropProfileImage', 'Close'); ?></button>
 
-            <div id="crop-loader" class="loader loader-modal hidden">
-                <div class="sk-spinner sk-spinner-three-bounce">
-                    <div class="sk-bounce1"></div>
-                    <div class="sk-bounce2"></div>
-                    <div class="sk-bounce3"></div>
-                </div>
-            </div>
+            <?php echo \humhub\widgets\LoaderWidget::widget(['id' => 'crop-loader', 'cssClass' => 'loader-modal hidden']); ?>
         </div>
 
         <?php echo \humhub\widgets\DataSaved::widget(); ?>

@@ -17,8 +17,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Date input format' => '',
     'Logo upload' => '',
     'Server Timezone' => '',
+    'Show sharing panel on dashboard' => '',
     'Show user profile post form on dashboard' => '',
     'Base URL' => 'URL base',
     'Default language' => 'Llengua per defecte',

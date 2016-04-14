@@ -17,8 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    '<strong>Congratulations</strong>. You\'re done.' => '',
-    'Sign in' => '',
-    'The installation completed successfully! Have fun with your new social network.' => '',
-    '<strong>Setup</strong> Complete' => '@@@@',
+    '<strong>Congratulations</strong>. You\'re done.' => '<strong>Felicitats</strong>. Has acabat.',
+    'Sign in' => 'Entra',
+    'The installation completed successfully! Have fun with your new social network.' => 'La instal·lació s\'ha completat correctament! Diverteix-te amb la teva nova xarxa social.',
 ];

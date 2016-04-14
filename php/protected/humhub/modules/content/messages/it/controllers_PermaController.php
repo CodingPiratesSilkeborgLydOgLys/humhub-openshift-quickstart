@@ -17,8 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Could not find requested content!' => '',
-    'Could not find requested permalink!' => '',
-    'Invalid model given!' => '@@@@',
-    'Unknown content class!' => '@@@@',
+    'Could not find requested content!' => 'Impossibile trovare il contenuto richiesto!',
+    'Could not find requested permalink!' => 'Impossibile trovare il link permanente richiesto!',
 ];

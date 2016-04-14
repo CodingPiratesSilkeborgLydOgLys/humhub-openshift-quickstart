@@ -43,7 +43,8 @@ abstract class Search extends \yii\base\Component
      *      model               Mixed String/Array
      *      type                Mixed String/Array
      *      checkPermissions    boolean (TRUE/false)
-     *      limitSpaces         Arraz (Limit Content to given Spaces(
+     *      limitSpaces         Array (Limit Content to given Spaces(
+     *      filters             Array (Additional filter Field=>Value)
      *
      * @param type $query
      * @param array $options
@@ -123,15 +124,19 @@ abstract class Search extends \yii\base\Component
             $meta['containerModel'] = $obj->className();
             $meta['containerPk'] = $obj->id;
         }
-        
+
         // Add content related meta data
         if ($meta['type'] == self::DOCUMENT_TYPE_CONTENT) {
-            $meta['containerModel'] = $obj->content->container->className();
-            $meta['containerPk'] = $obj->content->container->id;
-            if ($obj->content->visibility == Content::VISIBILITY_PRIVATE) {
-                $meta['visibility'] = self::DOCUMENT_VISIBILITY_PRIVATE;
+            if ($obj->content->container !== null) {
+                $meta['containerModel'] = $obj->content->container->className();
+                $meta['containerPk'] = $obj->content->container->id;
+                if ($obj->content->visibility == Content::VISIBILITY_PRIVATE) {
+                    $meta['visibility'] = self::DOCUMENT_VISIBILITY_PRIVATE;
+                } else {
+                    $meta['visibility'] = self::DOCUMENT_VISIBILITY_PUBLIC;
+                }
             } else {
-                $meta['visibility'] = self::DOCUMENT_VISIBILITY_PUBLIC;
+                $meta['visibility'] = self::DOCUMENT_VISIBILITY_PRIVATE;
             }
         } elseif ($meta['type'] == self::DOCUMENT_TYPE_SPACE && $obj->visibility == Space::VISIBILITY_NONE) {
             $meta['visibility'] = self::DOCUMENT_VISIBILITY_PRIVATE;

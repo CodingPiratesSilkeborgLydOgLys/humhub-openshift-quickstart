@@ -71,8 +71,6 @@ class Select extends BaseType
         if (!\humhub\modules\user\models\Profile::columnExists($columnName)) {
             $query = Yii::$app->db->getQueryBuilder()->addColumn(\humhub\modules\user\models\Profile::tableName(), $columnName, 'VARCHAR(255)');
             Yii::$app->db->createCommand($query)->execute();
-        } else {
-            Yii::error('Could not add profile column - already exists!');
         }
 
         return parent::save();
@@ -140,7 +138,7 @@ class Select extends BaseType
         if (!$raw) {
             $options = $this->getSelectItems();
             if (isset($options[$value])) {
-                return Yii::t($this->profileField->getTranslationCategory(), $options[$value]);
+                return \yii\helpers\Html::encode(Yii::t($this->profileField->getTranslationCategory(), $options[$value]));
             }
         }
 

@@ -25,7 +25,7 @@ return [
     'If you\'re already a member, please login with your username/email and password.' => '',
     'Login' => '',
     'Register' => '',
-    'Remember me next time' => '',
+    'Remember me' => '',
     'Sign in' => '',
     'email' => '',
     'password' => '',

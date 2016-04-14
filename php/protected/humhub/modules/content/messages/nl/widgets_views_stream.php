@@ -17,15 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'No matches with your selected filters!' => '',
-    'Nothing here yet!' => '',
-    '<b>Nobody wrote something yet.</b><br>Make the beginning and post something...' => '@@<b>Er heeft nog niemand een bericht geschreven.</b><br>Wees de eerste en laat een bericht achter...@@',
-    '<b>This profile stream is still empty</b>' => '@@<b>Er zijn nog geen profiel berichten!</b>@@',
-    '<b>This space is still empty!</b><br>Start by posting something here...' => '@@<b>Deze space is nog leeg!</b><br>Begin met het plaatsen van een bericht...@@',
-    '<b>Your dashboard is empty!</b><br>Post something on your profile or join some spaces!' => '@@<b>Je dashboard is leeg!</b><br>Plaats een bericht op je profiel of word lid van enkele ruimtes!@@',
-    '<b>Your profile stream is still empty</b><br>Get started and post something...' => '@@<b>Je profiel bevat nog geen berichten</b><br>Begin met het plaatsen van een bericht...@@',
-    'Nothing found which matches your current filter(s)!' => '@@Niets gevonden dat overeenkomt met de huidige filter(s)!@@',
-    'Show all' => '@@Toon alles@@',
     'Back to stream' => 'Terug naar berichten',
     'Content with attached files' => 'Berichten met bestanden',
     'Created by me' => 'Aangemaakt door mij',
@@ -33,6 +24,8 @@ return [
     'Filter' => 'Filter',
     'Include archived posts' => 'Inclusief gearchiveerde berichten',
     'Last update' => 'Laatste update',
+    'No matches with your selected filters!' => 'Geen resultaten met de geselecteerde filters!',
+    'Nothing here yet!' => 'Nog niets om weer te geven!',
     'Only private posts' => 'Alleen privé berichten',
     'Only public posts' => 'Alleen publieke berichten',
     'Posts only' => 'Alleen berichten',

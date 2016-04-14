@@ -17,15 +17,12 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    '<strong>Search</strong>' => '',
-    'Could not find requested module!' => '@@ماژول درخواست‌شده پیدا‌نشد!@@',
-    'Invalid request.' => '@@درخواست نامعتبر.@@',
-    'Keyword:' => '@@کلیدواژه:@@',
-    'Nothing found with your input.' => '@@نتیجه‌ای با ورودی شما یافت نشد.@@',
-    'Results' => '@@نتایج@@',
-    'Show more results' => '@@نمایش نتایج بیشتر@@',
-    'Sorry, nothing found!' => '@@متأسفانه موردی یافت نشد!@@',
-    'Welcome to %appName%' => '@@به %appName% خوش‌آمدید@@',
+    'Allow' => '',
+    'Default' => '',
+    'Deny' => '',
+    'Next' => '',
+    'Please type at least 3 characters' => '',
+    'Save' => '',
     '<strong>Latest</strong> updates' => '<strong>آخرین</strong> به‌روز‌رسانی‌ها',
     'Account settings' => 'تنظیمات حساب کاربری',
     'Administration' => 'مدیریت',

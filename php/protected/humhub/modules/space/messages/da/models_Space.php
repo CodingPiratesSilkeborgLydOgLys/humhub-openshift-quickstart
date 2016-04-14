@@ -1,10 +1,10 @@
 <?php
 return array (
+  'Color' => 'Farve',
   'Created At' => 'Oprettet den',
   'Created By' => 'Oprettet af',
   'Description' => 'Beskrivelse',
   'Join Policy' => 'Deltagelses Politik',
-  'Ldap DN' => 'LDAP DN',
   'Name' => 'Navn',
   'Owner' => 'Ejer',
   'Status' => 'Status',

@@ -17,7 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Date input format' => '',
     'Server Timezone' => '',
+    'Show sharing panel on dashboard' => '',
     'Base URL' => '기본 URL',
     'Default language' => '기본 언어',
     'Default space' => '기본 스페이스',

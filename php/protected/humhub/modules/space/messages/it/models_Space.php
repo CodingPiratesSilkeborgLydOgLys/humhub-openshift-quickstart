@@ -1,10 +1,10 @@
 <?php
 return array (
+  'Color' => 'Colore',
   'Created At' => 'Creato il',
   'Created By' => 'Creato da',
   'Description' => 'Descrizione',
   'Join Policy' => 'Policy di aggiunta',
-  'Ldap DN' => 'Ldap DN',
   'Name' => 'Nome',
   'Owner' => 'Proprietario',
   'Status' => 'Stato',
@@ -13,6 +13,6 @@ return array (
   'Updated by' => 'Aggiornato da',
   'Visibility' => 'Visibilità',
   'Website URL (optional)' => 'URL del sito (opzionale)',
-  'You cannot create private visible spaces!' => 'Non puoi creare space privati visibili!',
+  'You cannot create private visible spaces!' => 'Non puoi creare space privati invisibili!',
   'You cannot create public visible spaces!' => 'Non puoi creare space pubblici visibili!',
 );

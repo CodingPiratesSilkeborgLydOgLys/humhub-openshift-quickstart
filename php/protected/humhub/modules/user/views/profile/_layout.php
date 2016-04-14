@@ -12,7 +12,7 @@ $user = $this->context->getUser();
             <?= \humhub\modules\user\widgets\ProfileMenu::widget(['user' => $this->context->user]); ?>
         </div>
 
-        <?php if (isset($this->hideSidebar) && $this->hideSidebar) : ?>
+        <?php if (isset($this->context->hideSidebar) && $this->context->hideSidebar) : ?>
             <div class="col-md-10 layout-content-container">
                 <?php echo $content; ?>
             </div>
@@ -30,17 +30,6 @@ $user = $this->context->getUser();
                         [\humhub\modules\user\widgets\UserFollower::className(), ['user' => $this->context->user], ['sortOrder' => 30]],
                     ]
                 ]);
-
-                /*
-                  $this->widget('application.modules_core.user.widgets.ProfileSidebarWidget', array(
-                  'widgets' => array(
-                  array('application.modules_core.user.widgets.UserTagsWidget', array('user' => $this->context->getUser()), array('sortOrder' => 10)),
-                  array('application.modules_core.user.widgets.UserSpacesWidget', array('user' => $this->context->getUser())),
-                  array('application.modules_core.user.widgets.UserFollowerWidget', array('user' => $this->context->getUser())),
-                  )
-                  ));
-                 *
-                 */
                 ?>
             </div>
         <?php endif; ?>

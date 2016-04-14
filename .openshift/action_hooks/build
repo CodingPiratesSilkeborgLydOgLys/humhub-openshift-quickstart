@@ -2,3 +2,10 @@
 # This is a simple build script, place your post-deploy but pre-start commands in this script.  This script gets executed directly, so it could 
 # be python, php, ruby, etc.
 #
+echo "fixing permisiions..."
+    
+    chmod 777 ${OPENSHIFT_REPO_DIR}/php/assets
+    chmod 777 ${OPENSHIFT_REPO_DIR}/php/protected/config/
+    chmod 777 ${OPENSHIFT_REPO_DIR}/php/protected/modules
+    chmod 777 ${OPENSHIFT_REPO_DIR}/php/protected/runtime
+    chmod 777 ${OPENSHIFT_REPO_DIR}/php/uploads/*

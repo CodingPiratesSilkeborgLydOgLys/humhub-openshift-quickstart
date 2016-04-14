@@ -156,11 +156,12 @@ $(document).ready(function () {
 function setModalHandler() {
 
     // unbind all previously-attached events
-    $("a[data-target=#globalModal]").unbind();
+    $("a[data-target='#globalModal']").unbind();
 
-    $("a[data-target=#globalModal]").click(function (ev) {
+    $(document).off('click.humhub');
+    $(document).on('click.humhub', "a[data-target='#globalModal']", function (ev) {
         ev.preventDefault();
-
+       
         $("#globalModal").modal("show");
         var target = $(this).attr("href");
 
@@ -324,7 +325,15 @@ $.fn.format = function (options) {
 
 }
 
+function htmlEncode(value) {
+    //create a in-memory div, set it's inner text(which jQuery automatically encodes)
+    //then grab the encoded contents back out.  The div never exists on the page.
+    return $('<div/>').text(value).html();
+}
 
+function htmlDecode(value) {
+    return $('<div/>').html(value).text();
+}
 
 
 

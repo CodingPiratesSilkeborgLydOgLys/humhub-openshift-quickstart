@@ -3,6 +3,7 @@ return array (
   '<strong>Invite</strong> members' => '<strong>Inviter</strong> medlemmer',
   'Add an user' => 'Tilføjet en bruger',
   'Close' => 'Luk',
+  'Done' => 'Færdig',
   'Email addresses' => 'E-mail adresser',
   'Invite by email' => 'Inviter via e-mail',
   'Login' => 'Log ind',

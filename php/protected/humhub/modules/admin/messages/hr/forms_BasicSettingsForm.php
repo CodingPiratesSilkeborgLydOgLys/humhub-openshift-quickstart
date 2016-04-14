@@ -18,6 +18,7 @@
  */
 return [
     'Base URL' => '',
+    'Date input format' => '',
     'Default language' => '',
     'Default space' => '',
     'Invalid space' => '',
@@ -25,5 +26,6 @@ return [
     'Name of the application' => '',
     'Server Timezone' => '',
     'Show introduction tour for new users' => '',
+    'Show sharing panel on dashboard' => '',
     'Show user profile post form on dashboard' => '',
 ];

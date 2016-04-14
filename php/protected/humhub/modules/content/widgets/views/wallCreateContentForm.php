@@ -15,13 +15,6 @@ use humhub\modules\space\models\Space;
 
         <?php echo $form; ?>
 
-        <?php
-        /* Modify textarea for mention input */
-        echo \humhub\widgets\RichTextEditor::widget(array(
-            'id' => 'contentForm_message',
-        ));
-        ?>
-
         <div id="notifyUserContainer" class="form-group hidden" style="margin-top: 15px;">
             <input type="text" value="" id="notifyUserInput" name="notifyUserInput"/>
 
@@ -54,13 +47,7 @@ use humhub\modules\space\models\Space;
 
             <div class="btn_container">
 
-                <div id="postform-loader" class="loader loader-postform hidden">
-                    <div class="sk-spinner sk-spinner-three-bounce">
-                        <div class="sk-bounce1"></div>
-                        <div class="sk-bounce2"></div>
-                        <div class="sk-bounce3"></div>
-                    </div>
-                </div>
+                <?php echo \humhub\widgets\LoaderWidget::widget(['id' => 'postform-loader', 'cssClass' => 'loader-postform hidden']); ?>
 
                 <?php
                 echo \humhub\widgets\AjaxButton::widget([
@@ -75,7 +62,8 @@ use humhub\modules\space\models\Space;
                     ],
                     'htmlOptions' => [
                         'id' => "post_submit_button",
-                        'class' => 'btn btn-info'
+                        'class' => 'btn btn-info',
+                        'type' => 'submit'
                 ]]);
                 ?>
                 <?php
@@ -118,7 +106,7 @@ use humhub\modules\space\models\Space;
                                             class="fa fa-bell"></i> <?php echo Yii::t('ContentModule.widgets_views_contentForm', 'Notify members'); ?>
                                     </a>
                                 </li>
-                                <?php if ($contentContainer instanceof Space && $contentContainer->canShare()): /* can create public content */ ?>
+                                <?php if ($canSwitchVisibility): ?>
                                     <li>
                                         <a id="contentForm_visibility_entry" href="javascript:changeVisibility();"><i
                                                 class="fa fa-unlock"></i> <?php echo Yii::t('ContentModule.widgets_views_contentForm', 'Make public'); ?>
@@ -160,16 +148,37 @@ use humhub\modules\space\models\Space;
 
         // Hide options by default
         jQuery('.contentForm_options').fadeIn();
-    });
+    }); 
+    
+    setDefaultVisibility();
+        
+    function setDefaultVisibility() {
+        <?php if ($defaultVisibility == humhub\modules\content\models\Content::VISIBILITY_PRIVATE) : ?>
+            setPrivateVisibility();
+        <?php endif ;?>
+                
+        <?php if ($defaultVisibility == humhub\modules\content\models\Content::VISIBILITY_PUBLIC) : ?>
+            setPublicVisibility();
+        <?php endif ;?>
+    }
+    
+    function setPublicVisibility() {
+        $('#contentForm_visibility').prop( "checked", true );
+        $('#contentForm_visibility_entry').html('<i class="fa fa-lock"></i> <?php echo Yii::t('ContentModule.widgets_views_contentForm', 'Make private'); ?>');
+        $('.label-public').removeClass('hidden');
+    }
+    
+    function setPrivateVisibility() {
+        $('#contentForm_visibility').prop( "checked", false );
+        $('#contentForm_visibility_entry').html('<i class="fa fa-unlock"></i> <?php echo Yii::t('ContentModule.widgets_views_contentForm', 'Make public'); ?>');
+        $('.label-public').addClass('hidden');
+    }
+
     function changeVisibility() {
-        if ($('#contentForm_visibility').attr('checked') != 'checked') {
-            $('#contentForm_visibility').attr('checked', 'checked');
-            $('#contentForm_visibility_entry').html('<i class="fa fa-lock"></i> <?php echo Yii::t('ContentModule.widgets_views_contentForm', 'Make private'); ?>');
-            $('.label-public').removeClass('hidden');
+        if (!$('#contentForm_visibility').prop('checked')) {
+            setPublicVisibility();
         } else {
-            $('#contentForm_visibility').removeAttr('checked');
-            $('#contentForm_visibility_entry').html('<i class="fa fa-unlock"></i> <?php echo Yii::t('ContentModule.widgets_views_contentForm', 'Make public'); ?>');
-            $('.label-public').addClass('hidden');
+            setPrivateVisibility();
         }
     }
 
@@ -191,11 +200,16 @@ use humhub\modules\space\models\Space;
             $('.userInput').remove(); // used by UserPickerWidget
             $('#notifyUserContainer').addClass('hidden');
             $('#notifyUserInput').val('');
-            $('.label-public').addClass('hidden');
+            
+            setDefaultVisibility();
+            
             $('#contentFrom_files').val('');
             $('#public').attr('checked', false);
             $('#contentForm_message_contenteditable').html('<?php echo Html::encode(Yii::t("ContentModule.widgets_views_contentForm", "What's on your mind?")); ?>');
             $('#contentForm_message_contenteditable').addClass('atwho-placeholder');
+            
+            $('#contentFormBody').find('.atwho-input').trigger('clear');
+            
             // Notify FileUploadButtonWidget to clear (by providing uploaderId)
             resetUploader('contentFormFiles');
         } else {

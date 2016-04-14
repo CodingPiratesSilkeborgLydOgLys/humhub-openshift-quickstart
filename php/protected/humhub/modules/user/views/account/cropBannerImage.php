@@ -47,25 +47,6 @@ use yii\helpers\Url;
                     ]
                 ]);
                 ?>
-
-                <?php
-                /*
-                  $this->widget('ext.yii-jcrop.jCropWidget', array(
-                  'imageUrl' => $profileImage->getUrl('_org') . "?nocache=" . time(),
-                  'formElementX' => 'CropProfileImageForm_cropX',
-                  'formElementY' => 'CropProfileImageForm_cropY',
-                  'formElementWidth' => 'CropProfileImageForm_cropW',
-                  'formElementHeight' => 'CropProfileImageForm_cropH',
-                  'jCropOptions' => array(
-                  'aspectRatio' => '6.3',
-                  'boxWidth' => 400,
-                  'setSelect' => array(0, 0, 267, 48),
-                  ),
-                  )
-                  );
-                 *
-                 */
-                ?>
             </div>
 
 
@@ -78,7 +59,7 @@ use yii\helpers\Url;
                     'type' => 'POST',
                     'beforeSend' => new yii\web\JsExpression('function(){ setModalLoader(); }'),
                     'success' => new yii\web\JsExpression('function(html){ $("#globalModal").html(html); }'),
-                    'url' => Url::toRoute('/user/account/crop-banner-image'),
+                    'url' => Url::to(['/user/account/crop-banner-image', 'userGuid' => $user->guid]),
                 ],
                 'htmlOptions' => [
                     'class' => 'btn btn-primary'
@@ -88,13 +69,7 @@ use yii\helpers\Url;
             <button type="button" class="btn btn-primary"
                     data-dismiss="modal"><?php echo Yii::t('UserModule.views_profile_cropBannerImage', 'Close'); ?></button>
 
-            <div id="invite-loader" class="loader loader-modal hidden">
-                <div class="sk-spinner sk-spinner-three-bounce">
-                    <div class="sk-bounce1"></div>
-                    <div class="sk-bounce2"></div>
-                    <div class="sk-bounce3"></div>
-                </div>
-            </div>
+            <?php echo \humhub\widgets\LoaderWidget::widget(['id' => 'crop-loader', 'cssClass' => 'loader-modal hidden']); ?>
         </div>
 
         <?php echo \humhub\widgets\DataSaved::widget(); ?>

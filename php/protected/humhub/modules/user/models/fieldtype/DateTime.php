@@ -2,13 +2,14 @@
 
 /**
  * @link https://www.humhub.org/
- * @copyright Copyright (c) 2015 HumHub GmbH & Co. KG
+ * @copyright Copyright (c) 2016 HumHub GmbH & Co. KG
  * @license https://www.humhub.com/licences
  */
 
 namespace humhub\modules\user\models\fieldtype;
 
 use Yii;
+use humhub\libs\DbDateValidator;
 
 /**
  * ProfileFieldTypeDateTime
@@ -68,8 +69,6 @@ class DateTime extends BaseType
         if (!\humhub\modules\user\models\Profile::columnExists($columnName)) {
             $query = Yii::$app->db->getQueryBuilder()->addColumn(\humhub\modules\user\models\Profile::tableName(), $columnName, 'DATETIME');
             Yii::$app->db->createCommand($query)->execute();
-        } else {
-            Yii::error('Could not add profile column - already exists!');
         }
 
         return parent::save();
@@ -83,7 +82,7 @@ class DateTime extends BaseType
      */
     public function getFieldRules($rules = array())
     {
-        $rules[] = array($this->profileField->internal_name, 'date', 'timestampAttribute' => $this->profileField->internal_name);
+        $rules[] = array($this->profileField->internal_name, DbDateValidator::className(), 'format' => Yii::$app->formatter->dateInputFormat);
         return parent::getFieldRules($rules);
     }
 
@@ -94,7 +93,9 @@ class DateTime extends BaseType
     {
         return array($this->profileField->internal_name => array(
                 'type' => 'datetime',
+                'format' => Yii::$app->formatter->dateInputFormat,
                 'class' => 'form-control',
+                'readonly' => (!$this->profileField->editable),
                 'dateTimePickerOptions' => array(
                     'pickTime' => ($this->showTimePicker)
                 )
@@ -113,21 +114,7 @@ class DateTime extends BaseType
         if ($date == "" || $date == "0000-00-00 00:00:00")
             return "";
 
-        return $date;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function beforeProfileSave($value)
-    {
-        if ($value == "") {
-            return null;
-        }
-
-        $date = new \DateTime;
-        $date->setTimestamp($value);
-        return $date->format('Y-m-d H:i:s');
+        return \yii\helpers\Html::encode($date);
     }
 
 }

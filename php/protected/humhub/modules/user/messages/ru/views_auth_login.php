@@ -8,7 +8,7 @@ return array (
   'If you\'re already a member, please login with your username/email and password.' => 'Если у вас есть учетная запись, пожалуйста войдите с помощью имени пользователя или email.',
   'Login' => 'Логин',
   'Register' => 'Регистрация',
-  'Remember me next time' => 'Запомнить меня',
+  'Remember me' => 'Запомнить меня',
   'Sign in' => 'Войти',
   'email' => 'email',
   'password' => 'Пароль',

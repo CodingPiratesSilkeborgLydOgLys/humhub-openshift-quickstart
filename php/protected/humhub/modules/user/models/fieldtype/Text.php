@@ -144,8 +144,6 @@ class Text extends BaseType
         if (!\humhub\modules\user\models\Profile::columnExists($columnName)) {
             $query = Yii::$app->db->getQueryBuilder()->addColumn(\humhub\modules\user\models\Profile::tableName(), $columnName, 'VARCHAR(255)');
             Yii::$app->db->createCommand($query)->execute();
-        } else {
-            Yii::error('Could not add profile column - already exists!');
         }
 
         return parent::save();
@@ -193,12 +191,12 @@ class Text extends BaseType
         $value = $user->profile->$internalName;
 
         if (!$raw && $this->validator == self::VALIDATOR_EMAIL) {
-            return \yii\helpers\Html::a($value, $value);
+            return \yii\helpers\Html::a(\yii\helpers\Html::encode($value), $value);
         } elseif (!$raw && $this->validator == self::VALIDATOR_URL) {
-            return \yii\helpers\Html::a($value, $value, array('target' => '_blank'));
+            return \yii\helpers\Html::a(\yii\helpers\Html::encode($value), $value, array('target' => '_blank'));
         }
 
-        return $value;
+        return \yii\helpers\Html::encode($value);
     }
 
 }

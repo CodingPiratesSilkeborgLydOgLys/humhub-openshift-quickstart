@@ -11,14 +11,14 @@ use humhub\modules\content\components\ContentContainerActiveRecord;
     <div class="row">
         <div class="col-md-12">
             <div class="panel">
-                <div class="panel-heading"><?php echo Yii::t('base', '<strong>Search</strong>'); ?></div>
+                <div class="panel-heading"><strong><?php echo Yii::t('base', 'Search'); ?></strong></div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-3"></div>
                         <div class="col-md-6">
                             <?php echo Html::beginForm(Url::to(['index']), 'GET'); ?>
                             <div class="form-group form-group-search">
-                                <?php echo Html::textInput('keyword', $keyword, array('placeholder' => 'Keyword', 'class' => 'form-control form-search', 'id' => 'search-input-field')); ?>
+                                <?php echo Html::textInput('keyword', $keyword, array('placeholder' => Yii::t('SearchModule.views_search_index', 'Search for user, spaces and content'), 'class' => 'form-control form-search', 'id' => 'search-input-field')); ?>
                                 <?php echo Html::submitButton(Yii::t('base', 'Search'), array('class' => 'btn btn-default btn-sm form-button-search')); ?>
                             </div>
 
@@ -26,13 +26,13 @@ use humhub\modules\content\components\ContentContainerActiveRecord;
                             <div class="text-center">
                                 <a data-toggle="collapse" id="search-settings-link" href="#collapse-search-settings"
                                    style="font-size: 11px;"><i
-                                        class="fa fa-caret-right"></i> <?php echo Yii::t('SpaceModule.views_create_create', 'Advanced search settings'); ?>
+                                        class="fa fa-caret-right"></i> <?php echo Yii::t('SearchModule.views_search_index', 'Advanced search settings'); ?>
                                 </a>
                             </div>
 
                             <div id="collapse-search-settings" class="panel-collapse collapse">
                                 <br>
-                                Search only in certain spaces:
+                                <?php echo Yii::t('SearchModule.views_search_index', 'Search only in certain spaces:'); ?>
                                 <?php echo Html::textInput('limitSpaceGuids', $limitSpaceGuids, array('placeholder' => 'Specify space', 'style' => 'width:200px', 'id' => 'space_filter')); ?>
                                 <?php
                                 echo humhub\modules\space\widgets\Picker::widget([

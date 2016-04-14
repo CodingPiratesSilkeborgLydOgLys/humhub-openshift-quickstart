@@ -17,7 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Send' => '@@Отправить@@',
     '<strong>Request</strong> space membership' => '<strong>Отправить</strong> запрос на вступление',
     'Close' => 'Закрыть',
     'Please shortly introduce yourself, to become an approved member of this space.' => 'Коротко представьтесь',

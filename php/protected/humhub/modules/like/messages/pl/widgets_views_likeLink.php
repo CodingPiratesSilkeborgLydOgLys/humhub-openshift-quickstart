@@ -1,9 +1,9 @@
 <?php
 return array (
-  ' likes this.' => 'lubisz to. ',
-  '<strong>You</strong> like this.' => '<strong>Lubisz</strong> to. ',
-  '<strong>You</strong><br>' => '<strong>Ty</strong><br> ',
+  ' likes this.' => ' lubi to. ',
   'Like' => 'Lubię ',
   'Unlike' => 'Nie lubię ',
+  'You' => 'Ty',
+  'You like this.' => 'Ty to lubisz.',
   'and {count} more like this.' => 'i {count} więcej lubi to. ',
 );

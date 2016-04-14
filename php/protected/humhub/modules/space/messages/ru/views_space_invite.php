@@ -3,6 +3,7 @@ return array (
   '<strong>Invite</strong> members' => '<strong>Пригласить</strong> членов',
   'Add an user' => 'Добавить пользователя',
   'Close' => 'Закрыть',
+  'Done' => 'Выполнено',
   'Email addresses' => 'Адреса электронной почты',
   'Invite by email' => 'Пригласить по электронной почте',
   'Login' => 'Войти',

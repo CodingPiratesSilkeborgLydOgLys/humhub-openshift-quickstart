@@ -11,6 +11,7 @@ namespace humhub\modules\tour\controllers;
 use Yii;
 use yii\web\HttpException;
 use humhub\modules\space\models\Space;
+use yii\helpers\Url;
 
 /**
  * TourController
@@ -87,6 +88,26 @@ class TourController extends \humhub\components\Controller
         }
 
         return $this->redirect($space->createUrl('/space/space', array('tour' => true)));
+    }
+
+    /**
+     * Admin Welcome Lightbox
+     */
+    public function actionWelcome()
+    {
+        $user = Yii::$app->user->getIdentity();
+        $profile = $user->profile;
+
+        if ($user->id == 1 && $user->load(Yii::$app->request->post()) && $user->validate() && $user->save()) {
+            if ($profile->load(Yii::$app->request->post()) && $profile->validate() && $profile->save()) {
+                $user->setSetting("welcome", 1, "tour");
+                return $this->redirect(Url::to(['/dashboard/dashboard']));
+            }
+        }
+
+        return $this->renderAjax('welcome', [
+                    'user' => $user
+        ]);
     }
 
 }

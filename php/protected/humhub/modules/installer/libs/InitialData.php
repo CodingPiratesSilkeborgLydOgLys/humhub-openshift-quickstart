@@ -73,6 +73,7 @@ class InitialData
 
         // Basic
         Setting::Set('enable', 1, 'tour');
+        Setting::Set('enable', 1, 'share');
         Setting::Set('defaultLanguage', Yii::$app->language);
 
         // Notification
@@ -108,7 +109,7 @@ class InitialData
         // Add Fields
         $field = new ProfileField();
         $field->internal_name = "firstname";
-        $field->title = 'Firstname';
+        $field->title = 'First name';
         $field->sort_order = 100;
         $field->profile_field_category_id = $cGeneral->id;
         $field->field_type_class = \humhub\modules\user\models\fieldtype\Text::className();
@@ -125,7 +126,7 @@ class InitialData
 
         $field = new ProfileField();
         $field->internal_name = "lastname";
-        $field->title = 'Lastname';
+        $field->title = 'Last name';
         $field->sort_order = 200;
         $field->profile_field_category_id = $cGeneral->id;
         $field->field_type_class = \humhub\modules\user\models\fieldtype\Text::className();

@@ -17,15 +17,12 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    '<strong>Search</strong>' => '',
-    'Could not find requested module!' => '@@Nu s-a putut găsi modulul cerut!@@',
-    'Invalid request.' => '@@Cerere invalidă.@@',
-    'Keyword:' => '@@Cuvânt cheie:@@',
-    'Nothing found with your input.' => '@@Nu s-a găsit nimic cu datele introduse de tine.@@',
-    'Results' => '@@Rezultate@@',
-    'Show more results' => '@@Arată mai multe rezultate@@',
-    'Sorry, nothing found!' => '@@Ne cerem scuze, nu s-a găsit nimic!@@',
-    'Welcome to %appName%' => '@@Bun venit pe %appName%@@',
+    'Allow' => '',
+    'Default' => '',
+    'Deny' => '',
+    'Next' => '',
+    'Please type at least 3 characters' => '',
+    'Save' => '',
     '<strong>Latest</strong> updates' => '<strong>Ultimele</strong> actualizări',
     'Account settings' => 'Setări de Cont',
     'Administration' => 'Administrație',

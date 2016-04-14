@@ -17,16 +17,17 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Public (Members & Guests)' => '',
-    'Public (Members only)' => '',
-    'Public (Registered users only)' => '',
-    'Visible for all (members and guests)' => '',
-    'Visible for all' => '@@Visibile per tutti@@',
-    ' Invite and request' => 'Invita e richiedi',
+    'Default' => '',
+    'Private' => '',
+    'Public' => '',
     'Could not delete user who is a space owner! Name of Space: {spaceName}' => 'Non posso cancellare l\'utente che è proprietario di uno space! Nome dello Space: {spaceName}',
     'Everyone can enter' => 'Ognuno può entrare',
-    'Invite and request' => 'Invita e richiedi',
+    'Invite and request' => 'Inviti e richieste',
     'Only by invite' => 'Solo per invito',
     'Private (Invisible)' => 'Privato (Invisibile)',
+    'Public (Members & Guests)' => 'Pubblico (Membri e ospiti)',
+    'Public (Members only)' => 'Pubblico (Solo membri)',
+    'Public (Registered users only)' => 'Pubblico (Solo utenti registrati)',
     'Public (Visible)' => 'Pubblico (Visibile)',
+    'Visible for all (members and guests)' => 'Visibile a tutti (membri e ospiti)',
 ];

@@ -17,9 +17,12 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    '<strong>Search </strong> results' => '',
-    'All' => '',
-    'Content' => '',
-    'Spaces' => '',
-    'Users' => '',
+    'Advanced search settings' => '',
+    'Search for user, spaces and content' => '',
+    'Search only in certain spaces:' => '',
+    '<strong>Search </strong> results' => 'Résultats de la <strong>recherche</strong>',
+    'All' => 'Tous',
+    'Content' => 'Contenu',
+    'Spaces' => 'Espaces',
+    'Users' => 'Utilisateurs',
 ];

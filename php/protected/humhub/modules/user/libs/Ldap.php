@@ -8,10 +8,11 @@
 
 namespace humhub\modules\user\libs;
 
+use Exception;
 use Yii;
 use yii\base\Object;
 use humhub\models\Setting;
-use Exception;
+use humhub\libs\ParameterEvent;
 use humhub\modules\user\models\User;
 use humhub\modules\user\models\Group;
 use humhub\modules\user\models\ProfileField;
@@ -22,8 +23,13 @@ use humhub\modules\space\models\Space;
  *
  * @since 0.5
  */
-class Ldap extends Object
+class Ldap extends \yii\base\Component
 {
+
+    /**
+     * @event event when a ldap user is updated
+     */
+    const EVENT_UPDATE_USER = 'update_user';
 
     /**
      * @var Zend_Ldap instance
@@ -48,6 +54,11 @@ class Ldap extends Object
         }
         return self::$instance;
     }
+
+    /**
+     * @var User currently handled user
+     */
+    public $currentUser = null;
 
     /**
      * Creates singleton HLdap Instance which configured Zend_Ldap Class
@@ -88,14 +99,23 @@ class Ldap extends Object
     {
         try {
             $username = $this->ldap->getCanonicalAccountName($username, \Zend\Ldap\Ldap::ACCTNAME_FORM_DN);
+            // check Password
             $this->ldap->bind($username, $password);
-
+            // disconnect id needed here because otherwise binding/ldap connection again can cause errors.
+            $this->ldap->disconnect();
+            
             // Update Users Data
             $node = $this->ldap->getNode($username);
             $this->handleLdapUser($node);
-
             return true;
+        } catch (\Zend\Ldap\Exception\LdapException $ex) {
+            // log errors other than invalid credentials
+            if ($ex->getCode() !== LdapException::LDAP_INVALID_CREDENTIALS) {
+                Yii::error('LDAP Error: ' . $ex->getMessage());
+            }
+            return false;
         } catch (Exception $ex) {
+            Yii::error('LDAP Error: ' . $ex->getMessage());
             return false;
         }
     }
@@ -122,12 +142,23 @@ class Ldap extends Object
             }
 
 
-            foreach (User::find()->where(['auth_mode' => User::AUTH_MODE_LDAP])->andWhere(['!=', 'status', User::STATUS_DISABLED])->each() as $user) {
+            foreach (User::find()->where(['auth_mode' => User::AUTH_MODE_LDAP])->each() as $user) {
                 if (!in_array($user->id, $ldapUserIds)) {
-                    // User no longer available in ldap
-                    $user->status = User::STATUS_DISABLED;
-                    $user->save();
-                    Yii::warning('Disabled user ' . $user->username . ' (' . $user->id . ') - Not found in LDAP!');
+                    if($user->status != User::STATUS_DISABLED) {
+                        // User no longer available in ldap
+                        $user->status = User::STATUS_DISABLED;
+                        \humhub\modules\user\models\Setting::Set($user->id, 'disabled_by_ldap', true, 'user');
+                        $user->save();
+                        Yii::warning('Disabled user ' . $user->username . ' (' . $user->id . ') - Not found in LDAP!');
+                    }
+                } else {
+                    if($user->status == User::STATUS_DISABLED && \humhub\modules\user\models\Setting::Get($user->id, 'disabled_by_ldap', 'user', false)) {
+                        // User no longer available in ldap
+                        $user->status = User::STATUS_ENABLED;
+                        \humhub\modules\user\models\Setting::Set($user->id, 'disabled_by_ldap', '', 'user');
+                        $user->save();
+                        Yii::info('Reenabled disabled user ' . $user->username . ' (' . $user->id . ') - Found again in LDAP!');
+                    }
                 }
             }
         } catch (Exception $ex) {
@@ -147,13 +178,13 @@ class Ldap extends Object
         $usernameAttribute = Setting::Get('usernameAttribute', 'authentication_ldap');
         if ($usernameAttribute == '') {
             $usernameAttribute = 'sAMAccountName';
-        }        
-        
+        }
+
         $emailAttribute = Setting::Get('emailAttribute', 'authentication_ldap');
         if ($emailAttribute == '') {
             $emailAttribute = 'mail';
-        }        
-        
+        }
+
         $username = $node->getAttribute($usernameAttribute, 0);
         $email = $node->getAttribute($emailAttribute, 0);
         $guid = $this->binToStrGuid($node->getAttribute('objectGUID', 0));
@@ -180,16 +211,6 @@ class Ldap extends Object
             Yii::info('Create ldap user ' . $username . '!');
         }
 
-        // Update Group Mapping
-        foreach (Group::find()->andWhere(['!=', 'ldap_dn', ""])->all() as $group) {
-            if (in_array($group->ldap_dn, $node->getAttribute('memberOf'))) {
-                if ($user->group_id != $group->id) {
-                    $userChanged = true;
-                    $user->group_id = $group->id;
-                }
-            }
-        }
-
         // Update Users Field
         if ($user->username != $username) {
             $userChanged = true;
@@ -203,30 +224,37 @@ class Ldap extends Object
         if ($user->validate()) {
 
             // Only Save user when something is changed
-            if ($userChanged || $user->isNewRecord)
+            if ($userChanged || $user->isNewRecord) {
                 $user->save();
+            }
 
             // Update Profile Fields
             foreach (ProfileField::find()->andWhere(['!=', 'ldap_attribute', ''])->all() as $profileField) {
                 $ldapAttribute = $profileField->ldap_attribute;
+                $ldapValue = $node->getAttribute($ldapAttribute, 0);
                 $profileFieldName = $profileField->internal_name;
-                $user->profile->$profileFieldName = $node->getAttribute($ldapAttribute, 0);
-            }
 
-            if ($user->profile->validate()) {
-                $user->profile->save();
-
-                // Update Space Mapping
-                foreach (Space::find()->andWhere(['!=', 'ldap_dn', ''])->all() as $space) {
-                    if (in_array($space->ldap_dn, $node->getAttribute('memberOf')) || strpos($node->getDn(), $space->ldap_dn) !== false) {
-                        $space->addMember($user->id);
+                // Handle date fields (formats are specified in config)
+                if (isset(Yii::$app->params['ldap']['dateFields'][$ldapAttribute]) && $ldapValue != '') {
+                    $dateFormat = Yii::$app->params['ldap']['dateFields'][$ldapAttribute];
+                    $date = \DateTime::createFromFormat($dateFormat, $ldapValue);
+                    if ($date !== false) {
+                        $ldapValue = $date->format('Y-m-d');
+                    } else {
+                        $ldapValue = "";
                     }
                 }
+
+                $user->profile->$profileFieldName = $ldapValue;
+            }
+
+            if ($user->profile->validate() && $user->profile->save()) {
+                $this->trigger(self::EVENT_UPDATE_USER, new ParameterEvent(['user' => $user, 'node' => $node]));
             } else {
-                Yii::error('Could not create or update ldap user profile! (' . print_r($user->profile->getErrors(), true) . ")");
+                Yii::error('Could not create or update ldap user profil for user ' . $user->username . '! (' . print_r($user->profile->getErrors(), true) . ")");
             }
         } else {
-            Yii::error('Could not create or update ldap user! (' . print_r($user->getErrors(), true) . ")");
+            Yii::error('Could not create or update ldap user: ' . $user->username . '! (' . print_r($user->getErrors(), true) . ")");
         }
 
         return $user;

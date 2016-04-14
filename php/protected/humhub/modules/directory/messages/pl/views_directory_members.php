@@ -1,6 +1,7 @@
 <?php
 return array (
-  '<strong>Member</strong> directory' => '<strong>Książka adresowa</strong> członka',
+  '<strong>Group</strong> members - {group}' => '<strong>Użytkownicy</strong> grupy - {group}',
+  '<strong>Member</strong> directory' => '<strong>Lista</strong> użytkowników',
   'Follow' => 'Obserwuj',
   'No members found!' => 'Nie znaleziono członków!',
   'Search' => 'Szukaj',

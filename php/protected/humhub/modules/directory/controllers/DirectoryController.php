@@ -12,6 +12,7 @@ use Yii;
 use yii\helpers\Url;
 use humhub\models\Setting;
 use humhub\modules\directory\widgets\Sidebar;
+use yii\web\HttpException;
 
 /**
  * Community/Directory Controller
@@ -21,13 +22,8 @@ use humhub\modules\directory\widgets\Sidebar;
  * @package humhub.modules_core.directory.controllers
  * @since 0.5
  */
-class DirectoryController extends \humhub\components\Controller
+class DirectoryController extends \humhub\modules\directory\components\Controller
 {
-
-    /**
-     * @inheritdoc
-     */
-    public $subLayout = "@humhub/modules/directory/views/directory/_layout";
 
     /**
      * @inheritdoc
@@ -76,13 +72,28 @@ class DirectoryController extends \humhub\components\Controller
     {
         $keyword = Yii::$app->request->get('keyword', "");
         $page = (int) Yii::$app->request->get('page', 1);
-        //$_GET['keyword'] = $keyword; // Fix for post var
+        $groupId = (int) Yii::$app->request->get('groupId', "");
 
-        $searchResultSet = Yii::$app->search->find($keyword, [
+        $group = null;
+        if ($groupId) {
+            $group = \humhub\modules\user\models\Group::findOne(['id' => $groupId]);
+        }
+
+        $searchOptions = [
             'model' => \humhub\modules\user\models\User::className(),
             'page' => $page,
-            'pageSize' => Setting::Get('paginationSize')
-        ]);
+            'pageSize' => $this->module->pageSize,
+        ];
+
+        if ($this->module->memberListSortField != "") {
+            $searchOptions['sortField'] = $this->module->memberListSortField;
+        }
+
+        if ($group !== null) {
+            $searchOptions['filters'] = ['groupId' => $group->id];
+        }
+
+        $searchResultSet = Yii::$app->search->find($keyword, $searchOptions);
 
         $pagination = new \yii\data\Pagination(['totalCount' => $searchResultSet->total, 'pageSize' => $searchResultSet->pageSize]);
 
@@ -93,6 +104,7 @@ class DirectoryController extends \humhub\components\Controller
 
         return $this->render('members', array(
                     'keyword' => $keyword,
+                    'group' => $group,
                     'users' => $searchResultSet->getResultInstances(),
                     'pagination' => $pagination
         ));
@@ -114,7 +126,7 @@ class DirectoryController extends \humhub\components\Controller
             'model' => \humhub\modules\space\models\Space::className(),
             'page' => $page,
             'sortField' => ($keyword == '') ? 'title' : null,
-            'pageSize' => Setting::Get('paginationSize')
+            'pageSize' => $this->module->pageSize,
         ]);
 
         $pagination = new \yii\data\Pagination(['totalCount' => $searchResultSet->total, 'pageSize' => $searchResultSet->pageSize]);
@@ -127,7 +139,7 @@ class DirectoryController extends \humhub\components\Controller
         return $this->render('spaces', array(
                     'keyword' => $keyword,
                     'spaces' => $searchResultSet->getResultInstances(),
-                    'pagination' => $pagination
+                    'pagination' => $pagination,
         ));
     }
 
@@ -138,7 +150,7 @@ class DirectoryController extends \humhub\components\Controller
      */
     public function actionGroups()
     {
-        $groups = \humhub\modules\user\models\Group::find()->all();
+        $groups = \humhub\modules\user\models\Group::find()->orderBy(['name' => SORT_ASC])->all();
 
         \yii\base\Event::on(Sidebar::className(), Sidebar::EVENT_INIT, function($event) {
             $event->sender->addWidget(\humhub\modules\directory\widgets\GroupStatistics::className(), [], ['sortOrder' => 10]);

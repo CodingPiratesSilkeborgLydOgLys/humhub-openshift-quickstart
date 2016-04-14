@@ -1,5 +1,5 @@
 <?php
 return array (
-  'Post' => 'Odeslat',
+  'Send' => 'Odeslat',
   'Write a new comment...' => 'Napište komentář...',
 );

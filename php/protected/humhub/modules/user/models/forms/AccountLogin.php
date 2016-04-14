@@ -48,7 +48,7 @@ class AccountLogin extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             if ($user !== null) {
-                if ($user->auth_mode === User::AUTH_MODE_LOCAL && $user->currentPassword->validatePassword($this->password)) {
+                if ($user->auth_mode === User::AUTH_MODE_LOCAL && $user->currentPassword !== null && $user->currentPassword->validatePassword($this->password)) {
                     return;
                 } elseif ($user->auth_mode === User::AUTH_MODE_LDAP && Ldap::isAvailable() && Ldap::getInstance()->authenticate($user->username, $this->password)) {
                     return;
@@ -80,8 +80,8 @@ class AccountLogin extends Model
     public function login()
     {
         if ($this->validate() && Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0)) {
-        	$this->_user->last_login = new Expression('NOW()');
-        	$this->_user->save();
+            $this->_user->last_login = new Expression('NOW()');
+            $this->_user->save();
             return true;
         } else {
             return false;
@@ -101,16 +101,32 @@ class AccountLogin extends Model
             // Could not found user -> lookup in LDAP
             if ($this->_user === null && Ldap::isAvailable() && Setting::Get('enabled', 'authentication_ldap')) {
 
-                // Try load/create LDAP user
-                $usernameDn = Ldap::getInstance()->ldap->getCanonicalAccountName($this->username, \Zend\Ldap\Ldap::ACCTNAME_FORM_DN);
-                Ldap::getInstance()->handleLdapUser(Ldap::getInstance()->ldap->getNode($usernameDn));
+                try {
+                    // Try load/create LDAP user
+                    $usernameDn = Ldap::getInstance()->ldap->getCanonicalAccountName($this->username, \Zend\Ldap\Ldap::ACCTNAME_FORM_DN);
+                    Ldap::getInstance()->handleLdapUser(Ldap::getInstance()->ldap->getNode($usernameDn));
 
-                // Check if user is availble now
-                $this->_user = User::find()->where(['username' => $this->username])->orWhere(['email' => $this->username])->one();
+                    // Check if user is availble now
+                    $this->_user = User::find()->where(['username' => $this->username])->orWhere(['email' => $this->username])->one();
+                } catch (\Zend\Ldap\Exception\LdapException $ex) {
+                    // User not found
+                }
             }
         }
 
         return $this->_user;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return array(
+            'username' => Yii::t('UserModule.views_auth_login', 'username or email'),
+            'password' => Yii::t('UserModule.views_auth_login', 'password'),
+            'rememberMe' => Yii::t('UserModule.views_auth_login', 'Remember me'),
+        );
     }
 
 }

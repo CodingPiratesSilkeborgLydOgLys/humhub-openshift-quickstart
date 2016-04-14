@@ -11,6 +11,7 @@ namespace humhub\modules\file\controllers;
 use Yii;
 use yii\web\HttpException;
 use yii\web\UploadedFile;
+use yii\helpers\FileHelper;
 use humhub\models\Setting;
 use humhub\modules\file\models\File;
 use humhub\modules\content\components\ContentActiveRecord;
@@ -131,32 +132,39 @@ class FileController extends \humhub\components\Controller
      */
     public function actionDownload()
     {
+        // GUID of file
         $guid = Yii::$app->request->get('guid');
+        // Force Download Flag
+        $download = Yii::$app->request->get('download', 0);
+        // Optional suffix of file (e.g. scaled variant of image)
         $suffix = Yii::$app->request->get('suffix');
 
         $file = File::findOne(['guid' => $guid]);
-
         if ($file == null) {
             throw new HttpException(404, Yii::t('FileModule.controllers_FileController', 'Could not find requested file!'));
         }
-
         if (!$file->canRead()) {
             throw new HttpException(401, Yii::t('FileModule.controllers_FileController', 'Insufficient permissions!'));
         }
 
-        $filePath = $file->getPath();
-        $fileName = $file->getFilename($suffix);
-
-        if (!file_exists($filePath . DIRECTORY_SEPARATOR . $fileName)) {
+        if (!file_exists($file->getStoredFilePath($suffix))) {
             throw new HttpException(404, Yii::t('FileModule.controllers_FileController', 'Could not find requested file!'));
         }
 
+        $options = [
+            'inline' => false,
+            'mimeType' => FileHelper::getMimeTypeByExtension($file->getFilename($suffix))
+        ];
+
+        if ($download != 1 && in_array($options['mimeType'], Yii::$app->getModule('file')->inlineMimeTypes)) {
+            $options['inline'] = true;
+        }
+
         if (!Setting::Get('useXSendfile', 'file')) {
-            Yii::$app->response->sendFile($filePath . DIRECTORY_SEPARATOR . $fileName);
+            Yii::$app->response->sendFile($file->getStoredFilePath($suffix), $file->getFilename($suffix), $options);
         } else {
-            $options = array(
-                'saveName' => $fileName,
-            );
+            $filePath = $file->getStoredFilePath($suffix);
+            
             if (strpos($_SERVER['SERVER_SOFTWARE'], 'nginx') === 0) {
                 // set nginx specific X-Sendfile header name
                 $options['xHeader'] = 'X-Accel-Redirect';
@@ -166,7 +174,8 @@ class FileController extends \humhub\components\Controller
                     $filePath = substr($filePath, strlen($docroot));
                 }
             }
-            Yii::$app->response->xSendFile($filePath . DIRECTORY_SEPARATOR . $fileName, null, $options);
+            
+            Yii::$app->response->xSendFile($filePath, $file->getFilename($suffix), $options);
         }
     }
 

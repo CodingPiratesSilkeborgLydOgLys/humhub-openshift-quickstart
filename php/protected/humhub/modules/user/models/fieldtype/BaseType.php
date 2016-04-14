@@ -9,6 +9,7 @@
 namespace humhub\modules\user\models\fieldtype;
 
 use Yii;
+use humhub\modules\user\models\Profile;
 
 /**
  * ProfileFieldType is the base class for all Profile Field Types.
@@ -77,6 +78,7 @@ class BaseType extends \yii\base\Model
             Text::className() => Yii::t('UserModule.models_ProfileFieldType', 'Text'),
             TextArea::className() => Yii::t('UserModule.models_ProfileFieldType', 'Text Area'),
             Select::className() => Yii::t('UserModule.models_ProfileFieldType', 'Select List'),
+            Date::className() => Yii::t('UserModule.models_ProfileFieldType', 'Date'),
             DateTime::className() => Yii::t('UserModule.models_ProfileFieldType', 'Datetime'),
             Birthday::className() => Yii::t('UserModule.models_ProfileFieldType', 'Birthday'),
                 ), $this->fieldTypes);
@@ -200,6 +202,10 @@ class BaseType extends \yii\base\Model
      */
     public function loadFieldConfig()
     {
+        if ($this->profileField->field_type_config == '') {
+            return;
+        }
+
         $config = \yii\helpers\Json::decode($this->profileField->field_type_config);
         if (is_array($config)) {
             foreach ($config as $key => $value) {
@@ -260,7 +266,12 @@ class BaseType extends \yii\base\Model
     public function getUserValue($user, $raw = true)
     {
         $internalName = $this->profileField->internal_name;
-        return $user->profile->$internalName;
+
+        if ($raw) {
+            return $user->profile->$internalName;
+        } else {
+            return \yii\helpers\Html::encode($user->profile->$internalName);
+        }
     }
 
     public function getLabels()
@@ -288,6 +299,16 @@ class BaseType extends \yii\base\Model
         }
 
         return $value;
+    }
+
+    /**
+     * Load field type default settings to the profile
+     * 
+     * @param Profile $profile
+     */
+    public function loadDefaults(Profile $profile)
+    {
+        
     }
 
 }

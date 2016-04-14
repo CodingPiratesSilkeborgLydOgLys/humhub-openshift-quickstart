@@ -2,7 +2,7 @@
 
 /**
  * @link https://www.humhub.org/
- * @copyright Copyright (c) 2015 HumHub GmbH & Co. KG
+ * @copyright Copyright (c) 2016 HumHub GmbH & Co. KG
  * @license https://www.humhub.com/licences
  */
 
@@ -10,6 +10,7 @@ namespace humhub\modules\content\widgets;
 
 use Yii;
 use humhub\components\Widget;
+use humhub\modules\space\models\Space;
 
 /**
  * WallEntry is responsible to show a content inside a stream/wall.
@@ -50,6 +51,11 @@ class WallEntry extends Widget
     public $wallEntryLayout = "@humhub/modules/content/widgets/views/wallEntry.php";
 
     /**
+     * @var boolean show files widget containing a list of all assigned files
+     */
+    public $showFiles = true;
+
+    /**
      * @inheritdoc
      */
     public static function widget($config = [])
@@ -80,7 +86,36 @@ class WallEntry extends Widget
             return "";
         }
 
-        return \yii\helpers\Url::to([$this->editRoute, 'id' => $this->contentObject->id]);
+        // Don't show edit link, when content container is space and archived
+        if ($this->contentObject->content->container instanceof Space && $this->contentObject->content->container->status == Space::STATUS_ARCHIVED) {
+            return "";
+        }
+        
+        return $this->contentObject->content->container->createUrl($this->editRoute, ['id' => $this->contentObject->id]); 
+    }
+
+    /**
+     * Renders the wall entry output 
+     * 
+     * @return string the output
+     * @throws \Exception
+     */
+    public function renderWallEntry()
+    {
+        ob_start();
+        ob_implicit_flush(false);
+        try {
+            $out = $this->render($this->wallEntryLayout, [
+                'content' => $this->run(),
+                'object' => $this->contentObject,
+                'wallEntryWidget' => $this
+            ]);
+        } catch (\Exception $e) {
+            ob_end_clean();
+            throw $e;
+        }
+
+        return ob_get_clean() . $out;
     }
 
 }

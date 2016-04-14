@@ -36,6 +36,7 @@ use humhub\modules\user\components\ActiveQueryUser;
  * @property integer $updated_by
  * @property string $last_login
  * @property integer $visibility
+ * @property integer $contentcontainer_id
  */
 class User extends ContentContainerActiveRecord implements \yii\web\IdentityInterface, \humhub\modules\search\interfaces\Searchable
 {
@@ -121,7 +122,7 @@ class User extends ContentContainerActiveRecord implements \yii\web\IdentityInte
     {
         $scenarios = parent::scenarios();
         $scenarios['login'] = ['username', 'password'];
-        $scenarios['editAdmin'] = ['username', 'email', 'group_id', 'super_admin', 'auth_mode', 'status'];
+        $scenarios['editAdmin'] = ['username', 'email', 'group_id', 'super_admin', 'status'];
         $scenarios['registration'] = ['username', 'email', 'group_id'];
         return $scenarios;
     }
@@ -172,6 +173,7 @@ class User extends ContentContainerActiveRecord implements \yii\web\IdentityInte
     {
         return static::findOne(['guid' => $token]);
     }
+    
 
     /**
      * @inheritdoc
@@ -211,6 +213,11 @@ class User extends ContentContainerActiveRecord implements \yii\web\IdentityInte
     public function getGroup()
     {
         return $this->hasOne(Group::className(), ['id' => 'group_id']);
+    }
+    
+    public function isActive()
+    {
+        return $this->status === User::STATUS_ENABLED;
     }
 
     /**
@@ -358,16 +365,6 @@ class User extends ContentContainerActiveRecord implements \yii\web\IdentityInte
         foreach (\humhub\modules\space\models\Space::findAll(['auto_add_new_members' => 1]) as $space) {
             $space->addMember($this->id);
         }
-
-        // Create new wall record for this user
-        $wall = new \humhub\modules\content\models\Wall;
-        $wall->object_model = $this->className();
-        $wall->object_id = $this->id;
-        $wall->save();
-
-        $this->wall_id = $wall->id;
-
-        $this->update(false, ['wall_id']);
     }
 
     /**
@@ -417,12 +414,22 @@ class User extends ContentContainerActiveRecord implements \yii\web\IdentityInte
     }
 
     /**
+     * Checks if user has tags
+     * 
+     * @return boolean has tags set
+     */
+    public function hasTags()
+    {
+        return ($this->tags != '');
+    }
+
+    /**
      * Returns an array with assigned Tags
+     * 
+     * @return array tags
      */
     public function getTags()
     {
-
-        // split tags string into individual tags
         return preg_split("/[;,#]+/", $this->tags);
     }
 
@@ -459,6 +466,7 @@ class User extends ContentContainerActiveRecord implements \yii\web\IdentityInte
             'firstname' => $this->profile->firstname,
             'lastname' => $this->profile->lastname,
             'title' => $this->profile->title,
+            'groupId' => $this->group_id,
         );
 
         if (!$this->profile->isNewRecord) {
@@ -466,6 +474,8 @@ class User extends ContentContainerActiveRecord implements \yii\web\IdentityInte
                 $attributes['profile_' . $profileField->internal_name] = $profileField->getUserValue($this, true);
             }
         }
+
+        $this->trigger(self::EVENT_SEARCH_ADD, new \humhub\modules\search\events\SearchAddEvent($attributes));
 
         return $attributes;
     }
@@ -505,16 +515,6 @@ class User extends ContentContainerActiveRecord implements \yii\web\IdentityInte
     }
 
     /**
-     * Checks if the user can create a space
-     *
-     * @return boolean
-     */
-    public function canCreateSpace()
-    {
-        return ($this->canCreatePrivateSpace() || $this->canCreatePublicSpace());
-    }
-
-    /**
      * User can approve other users
      *
      * @return boolean
@@ -526,39 +526,6 @@ class User extends ContentContainerActiveRecord implements \yii\web\IdentityInte
         }
 
         if (GroupAdmin::find()->where(['user_id' => $this->id])->count() != 0) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks if the user can create public spaces
-     *
-     * @return boolean
-     */
-    public function canCreatePublicSpace()
-    {
-        if ($this->super_admin) {
-            return true;
-        } elseif ($this->group !== null && $this->group->can_create_public_spaces == 1) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks if user can create private spaces
-     *
-     * @return boolean
-     */
-    public function canCreatePrivateSpace()
-    {
-
-        if ($this->super_admin) {
-            return true;
-        } elseif ($this->group !== null && $this->group->can_create_private_spaces == 1) {
             return true;
         }
 
