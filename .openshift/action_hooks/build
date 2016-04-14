@@ -3,7 +3,9 @@
 # be python, php, ruby, etc.
 #
 echo "fixing permisiions..."
-    
+	cd  ${OPENSHIFT_REPO_DIR}/php/
+    composer global require "fxp/composer-asset-plugin:~1.1.0"
+    composer update
     chmod 777 ${OPENSHIFT_REPO_DIR}/php/assets
     chmod 777 ${OPENSHIFT_REPO_DIR}/php/protected/config/
     chmod 777 ${OPENSHIFT_REPO_DIR}/php/protected/modules

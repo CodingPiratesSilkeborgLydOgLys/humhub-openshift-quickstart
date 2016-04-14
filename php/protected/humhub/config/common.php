@@ -89,9 +89,9 @@ $config = [
         ],
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=humhub',
-            'username' => '',
-            'password' => '',
+            'dsn' => 'mysql:host='.getenv("OPENSHIFT_MYSQL_DB_HOST").';dbname=humhub',
+            'username' => ''.getenv("OPENSHIFT_MYSQL_DB_USERNAME"),
+            'password' => ''.getenv("OPENSHIFT_MYSQL_DB_PASSWORD");,
             'charset' => 'utf8',
             'enableSchemaCache' => true,
         ],
