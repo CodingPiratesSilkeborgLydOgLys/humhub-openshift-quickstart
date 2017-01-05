@@ -7,11 +7,13 @@ pwd
 
 echo "retrieving humhub stable"
 cd  ${OPENSHIFT_REPO_DIR}
+cd
 wget --quiet https://github.com/humhub/humhub/archive/stable.zip
 unzip -q stable.zip
 
 echo "fetch dependancies"
 cd  ${OPENSHIFT_REPO_DIR}/humhub-stable/
+ls
 php composer.phar global require "fxp/composer-asset-plugin:~1.1.1"
 php composer.phar update
 
