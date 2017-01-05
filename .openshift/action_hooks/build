@@ -1,7 +1,7 @@
 #!/bin/bash
 # Reference: https://www.humhub.org/docs/guide-admin-installation.html
 
-echo "retrieving humhub via git and use stable""
+echo "retrieving humhub via git and use stable"
 cd  ${OPENSHIFT_REPO_DIR}
 git clone https://github.com/humhub/humhub.git
 git checkout stable
