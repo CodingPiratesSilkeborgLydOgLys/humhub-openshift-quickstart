@@ -1,13 +1,27 @@
 #!/bin/bash
-# This is a simple build script, place your post-deploy but pre-start commands in this script.  This script gets executed directly, so it could 
-# be python,php, ruby, etc.
-#
-echo "fixing permisiions..."
-	cd  ${OPENSHIFT_REPO_DIR}/humhub/
-    composer global require "fxp/composer-asset-plugin:~1.1.0" #TODO: what is this
-    composer update
-    chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/assets
-    chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/protected/config/
-    chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/protected/modules
-    chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/protected/runtime
-    chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/uploads/*
+# Reference: https://www.humhub.org/docs/guide-admin-installation.html
+
+echo retrieving humhub via git and use stable
+cd cd  ${OPENSHIFT_REPO_DIR}
+git clone https://github.com/humhub/humhub.git
+git checkout stable
+
+echo fetch dependancies
+cd  ${OPENSHIFT_REPO_DIR}/humhub/
+php composer.phar global require "fxp/composer-asset-plugin:~1.1.1"
+php composer.phar update
+
+echo "writable by the webserver TODO:check 777 ok"
+chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/assets
+chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/protected/config
+chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/protected/modules
+chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/protected/runtime
+chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/uploads
+
+echo "executable"
+chmod ugo+x ${OPENSHIFT_REPO_DIR}/humhub/protected/yii
+chmod ugo+x ${OPENSHIFT_REPO_DIR}/humhub/protected/yii.bat
+
+echo "do not allow accessable by webserver: TODO: check that .htaccess is correct"
+echo protected
+echo uploads/file
