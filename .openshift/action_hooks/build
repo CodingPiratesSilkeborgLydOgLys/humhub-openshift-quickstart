@@ -3,7 +3,10 @@
 # https://www.humhub.org/docs/guide-admin-installation.html
 # https://developers.openshift.com/managing-your-applications/environment-variables.html
 
+echo "get some info"
 pwd
+ls
+env
 
 echo "retrieving humhub stable"
 cd  ${OPENSHIFT_REPO_DIR}
