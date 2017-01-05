@@ -12,35 +12,35 @@ env
 which composer
 
 echo "retrieving humhub stable"
-cd  ${OPENSHIFT_REPO_DIR}
+cd  ${OPENSHIFT_DATA_DIR}
 pwd
 wget --quiet https://github.com/humhub/humhub/archive/stable.zip
 unzip -q stable.zip
-rm stable.zip
+mv ${OPENSHIFT_DATA_DIR}/humhub-stable/* ${OPENSHIFT_REPO_DIR}
 
-echo "get composer"
-cd  ${OPENSHIFT_REPO_DIR}
+echo "get composer: DATA_DIR but could be REPO_DIR"
+cd  ${OPENSHIFT_DATA_DIR}
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 php -r "if (hash_file('SHA384', 'composer-setup.php') === '55d6ead61b29c7bdee5cccfb50076874187bd9f21f65d8991d46ec5cc90518f447387fb9f76ebae1fbbacf329e583e30') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 mkdir composer
-php composer-setup.php --install-dir=${OPENSHIFT_REPO_DIR}composer
-php -r "unlink('composer-setup.php');"
+php composer-setup.php --install-dir=${OPENSHIFT_DATA_DIR}composer
+# php -r "unlink('composer-setup.php');"
 
-echo "fetch dependancies"
-cd ${OPENSHIFT_REPO_DIR}humhub-stable
-php ${OPENSHIFT_REPO_DIR}composer/composer.phar global require "fxp/composer-asset-plugin:~1.1.1"
-php ${OPENSHIFT_REPO_DIR}composer/composer.phar update
+echo "fetch dependancies: global may not be good"
+cd ${OPENSHIFT_REPO_DIR}
+php ${OPENSHIFT_DATA_DIR}composer/composer.phar global require "fxp/composer-asset-plugin:~1.1.1"
+php ${OPENSHIFT_DATA_DIR}composer/composer.phar update
 
 echo "writable by the webserver TODO:check 777 ok"
-chmod 777 ${OPENSHIFT_REPO_DIR}humhub-stable/assets
-chmod 777 ${OPENSHIFT_REPO_DIR}humhub-stable/protected/config
-chmod 777 ${OPENSHIFT_REPO_DIR}humhub-stable/protected/modules
-chmod 777 ${OPENSHIFT_REPO_DIR}humhub-stable/protected/runtime
-chmod 777 ${OPENSHIFT_REPO_DIR}humhub-stable/uploads
+chmod 777 ${OPENSHIFT_REPO_DIR}assets
+chmod 777 ${OPENSHIFT_REPO_DIR}protected/config
+chmod 777 ${OPENSHIFT_REPO_DIR}protected/modules
+chmod 777 ${OPENSHIFT_REPO_DIR}protected/runtime
+chmod 777 ${OPENSHIFT_REPO_DIR}uploads
 
 echo "executable"
-chmod ugo+x ${OPENSHIFT_REPO_DIR}humhub-stable/protected/yii
-chmod ugo+x ${OPENSHIFT_REPO_DIR}humhub-stable/protected/yii.bat
+chmod ugo+x ${OPENSHIFT_REPO_DIR}protected/yii
+chmod ugo+x ${OPENSHIFT_REPO_DIR}protected/yii.bat
 
 echo "do not allow accessable by webserver: TODO: check that .htaccess is correct"
 echo protected
