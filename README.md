@@ -16,6 +16,8 @@ Cartridges used:
 - php-5.4
 - mysql-5.5
 
+TODO:
+humhub is added as a dep. git and may not work: find out with first Install with one click
 
 ### Installing via the command line
 
