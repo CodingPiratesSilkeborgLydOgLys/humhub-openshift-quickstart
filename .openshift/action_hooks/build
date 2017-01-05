@@ -7,7 +7,7 @@
 
 echo "get some info"
 pwd
-ls
+ls -R
 env
 which composer
 
@@ -27,7 +27,7 @@ unzip -q stable.zip
 #php -r "unlink('composer-setup.php');"
 
 echo "composer self-update"
-${OPENSHIFT_HOME_DIR}php/usr/bin/composer self-update
+${OPENSHIFT_HOMEDIR}php/usr/bin/composer self-update
 
 echo "fetch dependancies"
 composer global require "fxp/composer-asset-plugin:~1.1.1"
