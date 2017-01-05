@@ -25,7 +25,7 @@ mkdir composer
 php composer-setup.php --install-dir=${OPENSHIFT_DATA_DIR}composer
 # php -r "unlink('composer-setup.php');"
 
-echo "fetch dependancies: global may not be good"
+echo "fetch dependancies: global may not be good: requires OAuth token"
 cd ${OPENSHIFT_REPO_DIR}
 php ${OPENSHIFT_DATA_DIR}composer/composer.phar global require "fxp/composer-asset-plugin:~1.1.1"
 php ${OPENSHIFT_DATA_DIR}composer/composer.phar update
