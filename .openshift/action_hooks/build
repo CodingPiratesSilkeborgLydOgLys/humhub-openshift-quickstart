@@ -1,12 +1,12 @@
 #!/bin/bash
 # Reference: https://www.humhub.org/docs/guide-admin-installation.html
 
-echo retrieving humhub via git and use stable
-cd cd  ${OPENSHIFT_REPO_DIR}
+echo "retrieving humhub via git and use stable""
+cd  ${OPENSHIFT_REPO_DIR}
 git clone https://github.com/humhub/humhub.git
 git checkout stable
 
-echo fetch dependancies
+echo "fetch dependancies"
 cd  ${OPENSHIFT_REPO_DIR}/humhub/
 php composer.phar global require "fxp/composer-asset-plugin:~1.1.1"
 php composer.phar update
