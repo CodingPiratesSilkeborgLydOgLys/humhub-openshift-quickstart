@@ -21,8 +21,13 @@ if ! /usr/bin/mysql -u "$OPENSHIFT_MYSQL_DB_USERNAME" --password="$OPENSHIFT_MYS
 then
     echo "importing 'humhub.sql' schema."
     /usr/bin/mysql -u "$OPENSHIFT_MYSQL_DB_USERNAME" --password="$OPENSHIFT_MYSQL_DB_PASSWORD" -h "$OPENSHIFT_MYSQL_DB_HOST" "$OPENSHIFT_APP_NAME" <<EOF
-CREATE DATABASE if not exists `humhub` CHARACTER SET utf8 COLLATE utf8_general_ci;
-GRANT ALL ON humhub.* TO `$OPENSHIFT_MYSQL_DB_USERNAME`@localhost IDENTIFIED BY '$OPENSHIFT_MYSQL_DB_PASSWORD';
+CREATE DATABASE if not exists `humhub` 
+    DEFAULT CHARACTER SET utf8 
+    DEFAULT COLLATE utf8_general_ci;
+GRANT ALL 
+    ON humhub.* 
+    TO `$OPENSHIFT_MYSQL_DB_USERNAME`@localhost 
+    IDENTIFIED BY '$OPENSHIFT_MYSQL_DB_PASSWORD';
 FLUSH PRIVILEGES;    
 EOF
 else
