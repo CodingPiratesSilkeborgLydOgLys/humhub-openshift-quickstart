@@ -14,8 +14,8 @@ unzip -q stable.zip
 echo "fetch dependancies"
 cd  ${OPENSHIFT_REPO_DIR}/humhub-stable/
 ls
-php composer.phar global require "fxp/composer-asset-plugin:~1.1.1"
-php composer.phar update
+composer global require "fxp/composer-asset-plugin:~1.1.1"
+composer update
 
 echo "writable by the webserver TODO:check 777 ok"
 chmod 777 ${OPENSHIFT_REPO_DIR}/humhub-stable/assets
