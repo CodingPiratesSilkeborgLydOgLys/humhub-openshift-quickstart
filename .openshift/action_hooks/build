@@ -7,7 +7,7 @@ pwd
 
 echo "retrieving humhub stable"
 cd  ${OPENSHIFT_REPO_DIR}
-cd
+pwd
 wget --quiet https://github.com/humhub/humhub/archive/stable.zip
 unzip -q stable.zip
 
