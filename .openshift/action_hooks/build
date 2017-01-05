@@ -17,23 +17,21 @@ pwd
 wget --quiet https://github.com/humhub/humhub/archive/stable.zip
 unzip -q stable.zip
 
-echo "get composer"
-cd  ${OPENSHIFT_REPO_DIR}
-mkdir composer
+#echo "get composer"
+#cd  ${OPENSHIFT_REPO_DIR}
+#mkdir composer
 
-php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-php -r "if (hash_file('SHA384', 'composer-setup.php') === '55d6ead61b29c7bdee5cccfb50076874187bd9f21f65d8991d46ec5cc90518f447387fb9f76ebae1fbbacf329e583e30') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-php composer-setup.php --install-dir=${OPENSHIFT_REPO_DIR}composer
-php -r "unlink('composer-setup.php');"
+#php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+#php -r "if (hash_file('SHA384', 'composer-setup.php') === '55d6ead61b29c7bdee5cccfb50076874187bd9f21f65d8991d46ec5cc90518f447387fb9f76ebae1fbbacf329e583e30') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+#php composer-setup.php --install-dir=${OPENSHIFT_REPO_DIR}composer
+#php -r "unlink('composer-setup.php');"
 
-#echo "composer self-update"
-# ${OPENSHIFT_REPO_DIR}php/usr/bin/composer self-update
+echo "composer self-update"
+${OPENSHIFT_HOME_DIR}php/usr/bin/composer self-update
 
 echo "fetch dependancies"
-cd  ${OPENSHIFT_REPO_DIR}humhub-stable/
-ls
-php composer.phar global require "fxp/composer-asset-plugin:~1.1.1"
-php composer.phar update
+composer global require "fxp/composer-asset-plugin:~1.1.1"
+composer update
 
 echo "writable by the webserver TODO:check 777 ok"
 chmod 777 ${OPENSHIFT_REPO_DIR}humhub-stable/assets
