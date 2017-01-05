@@ -12,7 +12,7 @@ wget --quiet https://github.com/humhub/humhub/archive/stable.zip
 unzip -q stable.zip
 
 echo "composer self-update"
-composer self-update
+ ${OPENSHIFT_REPO_DIR}/php/usr/bin/composer self-update
 
 echo "fetch dependancies"
 cd  ${OPENSHIFT_REPO_DIR}/humhub-stable/
