@@ -11,6 +11,12 @@ Create an account at http://openshift.redhat.com/
 
 [![Click to install OpenShift](http://launch-shifter.rhcloud.com/launch/light/Click to install.svg)](https://openshift.redhat.com/app/console/application_types/custom?cartridges[]=php-5.4&cartridges[]=mysql-5.5&initial_git_url=https://github.com/CodingPiratesSilkeborgLydOgLys/humhub-openshift-quickstart&name=humhub)
 
+Note:
+Cartridges used:
+- php-5.4
+- mysql-5.5
+
+
 ### Installing via the command line
 
 
