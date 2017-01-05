@@ -17,17 +17,18 @@ then
 fi
 
 # Confirm database exists, if not create it
-if ! /usr/bin/mysql -u "$OPENSHIFT_MYSQL_DB_USERNAME" --password="$OPENSHIFT_MYSQL_DB_PASSWORD" -h "$OPENSHIFT_MYSQL_DB_HOST" -e "select * from sfj8s_assets;" "$OPENSHIFT_APP_NAME" > /dev/null 2>&1
+if ! mysql -u "$OPENSHIFT_MYSQL_DB_USERNAME" --password="$OPENSHIFT_MYSQL_DB_PASSWORD" -h "$OPENSHIFT_MYSQL_DB_HOST" -e "select * from sfj8s_assets;" "$OPENSHIFT_APP_NAME" > /dev/null 2>&1
 then
-    echo "importing 'humhub.sql' schema."
-    /usr/bin/mysql -u "$OPENSHIFT_MYSQL_DB_USERNAME" --password="$OPENSHIFT_MYSQL_DB_PASSWORD" -h "$OPENSHIFT_MYSQL_DB_HOST" "$OPENSHIFT_APP_NAME" <<EOF
-CREATE DATABASE if not exists `humhub` 
+    echo "creating humhub database"
+#    mysql -u "$OPENSHIFT_MYSQL_DB_USERNAME" --password="$OPENSHIFT_MYSQL_DB_PASSWORD" -h "$OPENSHIFT_MYSQL_DB_HOST" "$OPENSHIFT_APP_NAME" <<EOF
+    mysql  <<EOF
+CREATE DATABASE if not exists humhub 
     DEFAULT CHARACTER SET utf8 
     DEFAULT COLLATE utf8_general_ci;
 GRANT ALL 
     ON humhub.* 
-    TO `$OPENSHIFT_MYSQL_DB_USERNAME`@localhost 
-    IDENTIFIED BY '$OPENSHIFT_MYSQL_DB_PASSWORD';
+    TO ${OPENSHIFT_MYSQL_DB_USERNAME}@localhost 
+    IDENTIFIED BY "${OPENSHIFT_MYSQL_DB_PASSWORD}";
 FLUSH PRIVILEGES;    
 EOF
 else
