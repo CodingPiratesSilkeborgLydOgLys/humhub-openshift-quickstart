@@ -5,7 +5,8 @@ pwd
 
 echo "retrieving humhub stable"
 cd  ${OPENSHIFT_REPO_DIR}
-wget https://github.com/humhub/humhub/archive/stable.zip
+wget --quiet https://github.com/humhub/humhub/archive/stable.zip
+unzip -q stable.zip
 
 echo "fetch dependancies"
 cd  ${OPENSHIFT_REPO_DIR}/humhub-stable/
