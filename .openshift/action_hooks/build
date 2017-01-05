@@ -12,24 +12,24 @@ wget --quiet https://github.com/humhub/humhub/archive/stable.zip
 unzip -q stable.zip
 
 echo "composer self-update"
- ${OPENSHIFT_REPO_DIR}/php/usr/bin/composer self-update
+ ${OPENSHIFT_REPO_DIR}php/usr/bin/composer self-update
 
 echo "fetch dependancies"
-cd  ${OPENSHIFT_REPO_DIR}/humhub-stable/
+cd  ${OPENSHIFT_REPO_DIR}humhub-stable/
 ls
 composer global require "fxp/composer-asset-plugin:~1.1.1"
 composer update
 
 echo "writable by the webserver TODO:check 777 ok"
-chmod 777 ${OPENSHIFT_REPO_DIR}/humhub-stable/assets
-chmod 777 ${OPENSHIFT_REPO_DIR}/humhub-stable/protected/config
-chmod 777 ${OPENSHIFT_REPO_DIR}/humhub-stable/protected/modules
-chmod 777 ${OPENSHIFT_REPO_DIR}/humhub-stable/protected/runtime
-chmod 777 ${OPENSHIFT_REPO_DIR}/humhub-stable/uploads
+chmod 777 ${OPENSHIFT_REPO_DIR}humhub-stable/assets
+chmod 777 ${OPENSHIFT_REPO_DIR}humhub-stable/protected/config
+chmod 777 ${OPENSHIFT_REPO_DIR}humhub-stable/protected/modules
+chmod 777 ${OPENSHIFT_REPO_DIR}humhub-stable/protected/runtime
+chmod 777 ${OPENSHIFT_REPO_DIR}humhub-stable/uploads
 
 echo "executable"
-chmod ugo+x ${OPENSHIFT_REPO_DIR}/humhub-stable/protected/yii
-chmod ugo+x ${OPENSHIFT_REPO_DIR}/humhub-stable/protected/yii.bat
+chmod ugo+x ${OPENSHIFT_REPO_DIR}humhub-stable/protected/yii
+chmod ugo+x ${OPENSHIFT_REPO_DIR}humhub-stable/protected/yii.bat
 
 echo "do not allow accessable by webserver: TODO: check that .htaccess is correct"
 echo protected
