@@ -19,6 +19,7 @@ Cartridges used:
 TODO:
 humhub is added as a dep. git and may not work: find out with first Install with one click
 check requirements 
+```
 General Requirements:
 PHP 5.4+
 MySQL
@@ -31,3 +32,4 @@ PHP Zip Extension (http://php.net/manual/en/book.zip.php)
 PHP EXIF Extension (http://php.net/manual/en/book.exif.php)
 PHP INTL Extension (http://php.net/manual/en/intro.intl.php)
 PHP FileInfo Extension (http://php.net/manual/en/fileinfo.installation.php)
+```
