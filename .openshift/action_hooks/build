@@ -1,13 +1,13 @@
 #!/bin/bash
 # This is a simple build script, place your post-deploy but pre-start commands in this script.  This script gets executed directly, so it could 
-# be python, php, ruby, etc.
+# be python,php, ruby, etc.
 #
 echo "fixing permisiions..."
-	cd  ${OPENSHIFT_REPO_DIR}/php/
-    composer global require "fxp/composer-asset-plugin:~1.1.0"
+	cd  ${OPENSHIFT_REPO_DIR}/humhub/
+    composer global require "fxp/composer-asset-plugin:~1.1.0" 
     composer update
-    chmod 777 ${OPENSHIFT_REPO_DIR}/php/assets
-    chmod 777 ${OPENSHIFT_REPO_DIR}/php/protected/config/
-    chmod 777 ${OPENSHIFT_REPO_DIR}/php/protected/modules
-    chmod 777 ${OPENSHIFT_REPO_DIR}/php/protected/runtime
-    chmod 777 ${OPENSHIFT_REPO_DIR}/php/uploads/*
+    chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/assets
+    chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/protected/config/
+    chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/protected/modules
+    chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/protected/runtime
+    chmod 777 ${OPENSHIFT_REPO_DIR}/humhub/uploads/*
