@@ -7,6 +7,7 @@ echo "get some info"
 pwd
 ls
 env
+which composer
 
 echo "retrieving humhub stable"
 cd  ${OPENSHIFT_REPO_DIR}
