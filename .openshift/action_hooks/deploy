@@ -20,7 +20,7 @@ fi
 if ! /usr/bin/mysql -u "$OPENSHIFT_MYSQL_DB_USERNAME" --password="$OPENSHIFT_MYSQL_DB_PASSWORD" -h "$OPENSHIFT_MYSQL_DB_HOST" -e "select * from sfj8s_assets;" "$OPENSHIFT_APP_NAME" > /dev/null 2>&1
 then
     echo
-    echo "mporting 'humhub.sql' schema."
+    echo "importing 'humhub.sql' schema."
     echo
     /usr/bin/mysql -u "$OPENSHIFT_MYSQL_DB_USERNAME" --password="$OPENSHIFT_MYSQL_DB_PASSWORD" -h "$OPENSHIFT_MYSQL_DB_HOST" "$OPENSHIFT_APP_NAME" < "$OPENSHIFT_REPO_DIR/.openshift/action_hooks/humhub.sql"
     echo
